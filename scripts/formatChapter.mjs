@@ -1,7 +1,8 @@
 import { format } from "https://esm.run/prettier";
 import htmlPlugin from "https://esm.run/prettier/plugins/html.mjs";
+import { log } from "./index.mjs";
 
-export async function formatChapter(file) {
+export default async function (file) {
 	log(`Formatting ${file.name}`);
 
 	let text = `<?xml version="1.0" encoding="utf-8"?>
@@ -67,8 +68,4 @@ export async function formatChapter(file) {
 		filename: file.name,
 		blob: new Blob([text], { type: "application/xml" })
 	};
-}
-
-function log(message) {
-	document.getElementById("logs").innerText += `\n${message}`;
 }
