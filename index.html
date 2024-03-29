@@ -11,17 +11,30 @@
 			<code id="logs"></code>
 		</div>
 		<script type="module">
+			import JSZip from "https://esm.run/jszip";
 			import { formatChapter } from "./script.mjs";
 
 			document.getElementById("files").onchange = async function () {
-				for (const file of this.files) {
-					const { href, download } = await formatChapter(file),
-						a = document.createElement("a");
+				const a = document.createElement("a");
 
-					a.href = href;
-					a.download = download;
-					a.click();
+				if (this.files.length === 1) {
+					const { filename, blob } = await formatChapter(this.files[0]);
+
+					a.download = filename;
+					a.href = URL.createObjectURL(blob);
+				} else {
+					const zip = new JSZip();
+
+					for (const file of this.files) {
+						const { filename, blob } = await formatChapter(file);
+						zip.file(filename, blob);
+					}
+
+					a.download = "chapters.zip";
+					a.href = URL.createObjectURL(await zip.generateAsync({ type: "blob" }));
 				}
+
+				a.click();
 			};
 		</script>
 	</body>

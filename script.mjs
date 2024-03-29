@@ -64,8 +64,8 @@ export async function formatChapter(file) {
 	log(`Formatted ${file.name}`);
 
 	return {
-		href: URL.createObjectURL(new Blob([text], { type: "application/xml" })),
-		download: file.name
+		filename: file.name,
+		blob: new Blob([text], { type: "application/xml" })
 	};
 }
 
