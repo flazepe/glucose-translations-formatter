@@ -18,11 +18,8 @@
 					const { href, download } = await formatChapter(file),
 						a = document.createElement("a");
 
-					a.style.display = "none";
 					a.href = href;
 					a.download = download;
-
-					document.body.appendChild(a);
 					a.click();
 				}
 			};
