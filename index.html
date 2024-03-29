@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Glucose Translations Formatter</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=yes" />
+	</head>
+	<body style="background-color: #000; color: #fff; font-family: Comic Sans MS, sans-serif">
+		<div style="display: flex; flex-direction: column; align-items: center">
+			<h1>Select your chapter file(s)</h1>
+			<input type="file" id="files" name="files" multiple />
+			<code id="logs"></code>
+		</div>
+		<script type="module">
+			import { formatChapter } from "./script.mjs";
+
+			document.getElementById("files").onchange = async function () {
+				for (const file of this.files) {
+					const { href, download } = await formatChapter(file),
+						a = document.createElement("a");
+
+					a.style.display = "none";
+					a.href = href;
+					a.download = download;
+
+					document.body.appendChild(a);
+					a.click();
+				}
+			};
+		</script>
+	</body>
+</html>

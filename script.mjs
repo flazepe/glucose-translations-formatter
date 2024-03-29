@@ -1,7 +1,9 @@
-import { readFile } from "fs/promises";
-import { INPUT_FOLDER } from "../index.mjs";
+import { format } from "https://esm.run/prettier";
+import htmlPlugin from "https://esm.run/prettier/plugins/html.mjs";
 
-export default async function (filename) {
+export async function formatChapter(file) {
+	log(`Formatting chapter file: ${file.name}`);
+
 	let text = `<?xml version="1.0" encoding="utf-8"?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
@@ -9,11 +11,11 @@ export default async function (filename) {
 				<title>Chapter</title>
 				<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
 			</head>
-			<body>${await readFile(`${INPUT_FOLDER}/${filename}`, "utf8")}</body>
+			<body>${await file.text()}</body>
 		</html>`,
 		footnoteCount = 0;
 
-	console.log(`Wrapped ${filename} with XML`);
+	log(`Wrapped ${file.name} with XML`);
 
 	const chapterMatch = text.match(/<h1><a href=".*?">(.*?)<\/a><\/h1>/);
 	if (chapterMatch) text = text.replace(chapterMatch[0], `<h1><a href="Contents.xhtml">${chapterMatch[1]}</a></h1>`);
@@ -29,7 +31,7 @@ export default async function (filename) {
 		// Increase footnote count
 		footnoteCount++;
 
-		console.log(`Found and fixed ${footnoteCount} footnote shortcut(s) from ${filename}`);
+		log(`Found and fixed ${footnoteCount} footnote shortcut(s) from ${file.name}`);
 	}
 
 	// Locate the body closing tag
@@ -50,7 +52,27 @@ export default async function (filename) {
 		</body>
 	</html>`;
 
-	console.log(`Added ${footnoteCount} footnote(s) at the bottom of the body of ${filename}`);
+	log(`Added ${footnoteCount} footnote(s) at the bottom of the body of ${file.name}`);
 
-	return text;
+	text = await format(text, {
+		parser: "html",
+		plugins: [htmlPlugin],
+		printWidth: 100,
+		tabWidth: 4
+	});
+
+	log(`Formatted ${file.name}`);
+
+	const split = file.name.split("."),
+		extension = split.pop(),
+		filename = split.join(".");
+
+	return {
+		href: URL.createObjectURL(new Blob([text], { type: "application/xml" })),
+		download: `${filename}_formatted.${extension}`
+	};
+}
+
+function log(message) {
+	document.getElementById("logs").innerText += `\n${message}`;
 }
