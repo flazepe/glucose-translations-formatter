@@ -15,16 +15,16 @@ export default async function (filename) {
 
 	console.log(`Wrapped ${filename} with XML`);
 
-	const chapterMatch = text.match(/<h1><a href="(.+?)">(.+?)<\/a><\/h1>/);
+	const chapterMatch = text.match(/<h1><a href="(.*?)">(.*?)<\/a><\/h1>/);
 	if (chapterMatch) text = text.replace(chapterMatch[0], `<h1><a href="Contents.xhtml">${chapterMatch[2]}</a></h1>`);
 
 	// Match footnote shortcuts
-	for (const match of text.match(/<a href="(.+?)"><sup>\[\d+?\]/g)) {
+	for (const match of text.match(/<a href=".*?">.*?<sup>.*?\[\d+?\].*?<\/sup>.*?<\/a>/g) ?? []) {
 		// Determine footnote number from the shortcut
-		const n = match.split("[")[1].slice(0, -1);
+		const n = match.split("[")[1].split("]")[0];
 
 		// Replace the shortcut with a proper reference
-		text = text.replace(match, `<a epub:type="noteref" id="Return${n}" href="#TN${n}"><sup>[${n}]`);
+		text = text.replace(match, `<a epub:type="noteref" id="Return${n}" href="#TN${n}">${match.match(/<a.*?>(.*?)<\/a>/)[1]}</a>`);
 
 		// Increase footnote count
 		footnoteCount++;
