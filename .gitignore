@@ -1,0 +1,10 @@
+# Ignore everything but .gitignore in input folder
+_input/*
+!_input/.gitkeep
+
+# Ignore output folder completely
+_output
+
+# Miscellaneous
+node_modules
+package-lock.json
