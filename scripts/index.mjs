@@ -12,10 +12,10 @@ document.getElementById("files").onchange = async function () {
 			zip.file(filename, blob);
 		}
 
-		log(`Zipped ${this.files.length} files`);
-
 		a.download = "chapters.zip";
 		a.href = URL.createObjectURL(await zip.generateAsync({ type: "blob" }));
+
+		log(`Zipped ${this.files.length} files`);
 	} else {
 		const { filename, blob } = await formatChapter(this.files[0]);
 
