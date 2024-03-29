@@ -63,13 +63,9 @@ export async function formatChapter(file) {
 
 	log(`Formatted ${file.name}`);
 
-	const split = file.name.split("."),
-		extension = split.pop(),
-		filename = split.join(".");
-
 	return {
 		href: URL.createObjectURL(new Blob([text], { type: "application/xml" })),
-		download: `${filename}_formatted.${extension}`
+		download: file.name
 	};
 }
 
