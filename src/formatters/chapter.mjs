@@ -15,8 +15,8 @@ export default async function (filename) {
 
 	console.log(`Wrapped ${filename} with XML`);
 
-	const chapterMatch = text.match(/<h1><a href="(.*?)">(.*?)<\/a><\/h1>/);
-	if (chapterMatch) text = text.replace(chapterMatch[0], `<h1><a href="Contents.xhtml">${chapterMatch[2]}</a></h1>`);
+	const chapterMatch = text.match(/<h1><a href=".*?">(.*?)<\/a><\/h1>/);
+	if (chapterMatch) text = text.replace(chapterMatch[0], `<h1><a href="Contents.xhtml">${chapterMatch[1]}</a></h1>`);
 
 	// Match footnote shortcuts
 	for (const match of text.match(/<a href=".*?">.*?<sup>.*?\[\d+?\].*?<\/sup>.*?<\/a>/g) ?? []) {
