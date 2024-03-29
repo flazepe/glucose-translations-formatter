@@ -24,7 +24,7 @@ export default async function (filename) {
 		const n = match.split("[")[1].slice(0, -1);
 
 		// Replace the shortcut with a proper reference
-		text = text.replace(match, `<a epub:type="noteref" id="Return${n}" href="#TN${n}"><sup>[${n}]>`);
+		text = text.replace(match, `<a epub:type="noteref" id="Return${n}" href="#TN${n}"><sup>[${n}]`);
 
 		// Increase footnote count
 		footnoteCount++;
