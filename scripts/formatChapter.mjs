@@ -20,7 +20,7 @@ export default async function (file) {
 	const chapterMatch = text.match(/<h1><a href=".*?">(.*?)<\/a><\/h1>/);
 	if (chapterMatch) text = text.replace(chapterMatch[0], `<h1><a href="Contents.xhtml">${chapterMatch[1]}</a></h1>`);
 
-	const footnoteCount = 0;
+	let footnoteCount = 0;
 
 	for (const match of text.match(/<a href=".*?">.*?<sup>.*?\[\d+?\].*?<\/sup>.*?<\/a>/g) ?? []) {
 		// Determine footnote number
